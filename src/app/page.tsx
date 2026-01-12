@@ -2,10 +2,12 @@
 
 import { useChat } from '@ai-sdk/react';
 import { Send, Bot, User, Sparkles } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  const { messages, append, isLoading } = useChat() as any;
+  const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -15,6 +17,14 @@ export default function Chat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    await append({ role: 'user', content: input });
+    setInput('');
+  };
 
   return (
     <div className="flex flex-col h-screen max-w-3xl mx-auto bg-background text-foreground">
@@ -35,7 +45,7 @@ export default function Chat() {
           </div>
         )}
 
-        {messages.map((m) => (
+        {messages.map((m: any) => (
           <div
             key={m.id}
             className={`flex items-start gap-4 ${m.role === 'user' ? 'flex-row-reverse' : ''
@@ -60,7 +70,10 @@ export default function Chat() {
                 : 'bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-bl-none'
                 }`}
             >
-              <p className="leading-relaxed whitespace-pre-wrap">{m.content}</p>
+              <p className="leading-relaxed whitespace-pre-wrap">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {(m as any).content || (m as any).parts?.map((p: any) => p.type === 'text' ? p.text : '').join('')}
+              </p>
             </div>
           </div>
         ))}
@@ -85,7 +98,7 @@ export default function Chat() {
             className="w-full p-4 pr-12 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
             value={input}
             placeholder="Say something..."
-            onChange={handleInputChange}
+            onChange={(e) => setInput(e.target.value)}
           />
           <button
             type="submit"
