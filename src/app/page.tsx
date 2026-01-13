@@ -39,9 +39,28 @@ export default function Chat() {
 
       <main className="flex-1 overflow-y-auto p-4 space-y-6">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-50">
-            <Bot className="w-12 h-12" />
-            <p className="text-lg font-medium">How can I help you today?</p>
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
+            <div className="flex flex-col items-center space-y-4 opacity-50">
+              <Bot className="w-12 h-12" />
+              <p className="text-lg font-medium">How can I help you today?</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg w-full px-4">
+              {[
+                'Explain quantum physics',
+                'Write a haiku about code',
+                'What are the latest AI trends?',
+                'Help me debug a React component'
+              ].map((question) => (
+                <button
+                  key={question}
+                  onClick={() => append({ role: 'user', content: question })}
+                  className="p-4 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors text-sm text-left shadow-sm"
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
