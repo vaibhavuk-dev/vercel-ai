@@ -1,12 +1,12 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { Send, Bot, User, Sparkles } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Trash } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Chat() {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  const { messages, append, isLoading } = useChat() as any;
+  const { messages, append, isLoading, setMessages } = useChat() as any;
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +35,14 @@ export default function Chat() {
         <h1 className="text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
           AI Assistant
         </h1>
+        <div className="flex-1" />
+        <button
+          onClick={() => setMessages([])}
+          className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors text-zinc-500 hover:text-red-500"
+          title="Clear Chat"
+        >
+          <Trash className="w-5 h-5" />
+        </button>
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -44,7 +52,7 @@ export default function Chat() {
               <Bot className="w-12 h-12" />
               <p className="text-lg font-medium">How can I help you today?</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg w-full px-4">
               {[
                 'Explain quantum physics',
