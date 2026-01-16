@@ -3,6 +3,8 @@
 import { useChat } from '@ai-sdk/react';
 import { Send, Bot, User, Sparkles, Trash } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function Chat() {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -97,10 +99,12 @@ export default function Chat() {
                 : 'bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-bl-none'
                 }`}
             >
-              <p className="leading-relaxed whitespace-pre-wrap">
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {(m as any).content || (m as any).parts?.map((p: any) => p.type === 'text' ? p.text : '').join('')}
-              </p>
+              <div className="prose dark:prose-invert max-w-none text-sm">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {(m as any).content || (m as any).parts?.map((p: any) => p.type === 'text' ? p.text : '').join('')}
+                </ReactMarkdown>
+              </div>
             </div>
           </div>
         ))}
