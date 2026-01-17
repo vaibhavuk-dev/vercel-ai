@@ -5,6 +5,7 @@ import { Send, Bot, User, Sparkles, Trash } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { CodeBlock } from '@/components/ui/code-block';
 
 export default function Chat() {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -100,7 +101,29 @@ export default function Chat() {
                 }`}
             >
               <div className="prose dark:prose-invert max-w-none text-sm">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    code({ className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || '');
+                      const isInline = !match;
+
+                      if (isInline) {
+                        return (
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        );
+                      }
+
+                      return (
+                        <CodeBlock className={className}>
+                          {children}
+                        </CodeBlock>
+                      );
+                    },
+                  }}
+                >
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {(m as any).content || (m as any).parts?.map((p: any) => p.type === 'text' ? p.text : '').join('')}
                 </ReactMarkdown>
