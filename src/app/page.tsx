@@ -5,6 +5,7 @@ import { Send, Bot, User, Sparkles, Trash } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import TextareaAutosize from 'react-textarea-autosize';
 import { CodeBlock } from '@/components/ui/code-block';
 
 export default function Chat() {
@@ -27,6 +28,13 @@ export default function Chat() {
 
     await append({ role: 'user', content: input });
     setInput('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e as any);
+    }
   };
 
   return (
@@ -147,12 +155,15 @@ export default function Chat() {
       </main>
 
       <div className="p-4 border-t border-border/10 bg-background/80 backdrop-blur-md sticky bottom-0 z-10">
-        <form onSubmit={handleSubmit} className="relative">
-          <input
-            className="w-full p-4 pr-12 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
+        <form onSubmit={handleSubmit} className="relative flex items-end">
+          <TextareaAutosize
+            className="w-full p-4 pr-12 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm resize-none"
             value={input}
             placeholder="Say something..."
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            minRows={1}
+            maxRows={6}
           />
           <button
             type="submit"
