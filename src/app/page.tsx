@@ -1,7 +1,7 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { Send, Bot, User, Sparkles, Trash } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Trash, Square } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -10,7 +10,7 @@ import { CodeBlock } from '@/components/ui/code-block';
 
 export default function Chat() {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  const { messages, append, isLoading, setMessages } = useChat() as any;
+  const { messages, append, isLoading, setMessages, stop } = useChat() as any;
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -139,7 +139,7 @@ export default function Chat() {
             </div>
           </div>
         ))}
-        {isLoading && (
+        {isLoading && messages[messages.length - 1]?.role === 'user' && (
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center">
               <Bot className="w-5 h-5" />
@@ -166,12 +166,22 @@ export default function Chat() {
             maxRows={6}
           />
           <button
-            type="submit"
-            disabled={!input.trim() || isLoading}
+            type={isLoading ? 'button' : 'submit'}
+            onClick={isLoading ? () => stop() : undefined}
+            disabled={!isLoading && !input.trim()}
             className="absolute right-2 top-2 p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <Send className="w-5 h-5" />
-            <span className="sr-only">Send</span>
+            {isLoading ? (
+              <>
+                <Square className="w-5 h-5 fill-current" />
+                <span className="sr-only">Stop generation</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-5 h-5" />
+                <span className="sr-only">Send</span>
+              </>
+            )}
           </button>
         </form>
       </div>
