@@ -12,6 +12,8 @@ vi.mock('@ai-sdk/react', () => ({
         append: mockAppend,
         isLoading: false,
         setMessages: mockSetMessages,
+        stop: vi.fn(),
+        reload: vi.fn(),
         input: '',
         handleInputChange: vi.fn(),
         handleSubmit: vi.fn(),

@@ -1,7 +1,7 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { Send, Bot, User, Sparkles, Trash, Square } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Trash, Square, RefreshCw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -10,7 +10,7 @@ import { CodeBlock } from '@/components/ui/code-block';
 
 export default function Chat() {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  const { messages, append, isLoading, setMessages, stop } = useChat() as any;
+  const { messages, append, isLoading, setMessages, stop, reload } = useChat() as any;
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -149,6 +149,17 @@ export default function Chat() {
               <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce inline-block mr-1 delay-100"></span>
               <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce inline-block delay-200"></span>
             </div>
+          </div>
+        )}
+        {!isLoading && messages.length > 0 && messages[messages.length - 1]?.role === 'assistant' && (
+          <div className="flex justify-center">
+            <button
+              onClick={() => reload()}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Regenerate response
+            </button>
           </div>
         )}
         <div ref={messagesEndRef} />
