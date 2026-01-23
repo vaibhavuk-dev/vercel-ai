@@ -9,6 +9,9 @@ A modern AI chat interface built with Next.js, Vercel AI SDK, and Tailwind CSS.
 - 🎨 **Syntax Highlighting**: Beautiful code blocks with `react-syntax-highlighter` (VS Code Dark Plus theme).
 - 📋 **Copy to Clipboard**: One-click code copying.
 - 🌗 **Responsive Design**: Clean UI with Tailwind CSS.
+- ⌨️ **Smart Input**: Auto-expanding textarea with Shift+Enter support.
+- 🛑 **Control Generation**: Stop AI generation mid-stream.
+- 🔄 **Regenerate Response**: Retry unsatisfactory AI responses.
 
 ## Getting Started
 
