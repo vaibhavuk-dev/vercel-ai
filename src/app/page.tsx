@@ -1,12 +1,18 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { Send, Bot, User, Sparkles, Trash, Square, RefreshCw } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Trash, Square, RefreshCw, Copy, Check } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import TextareaAutosize from 'react-textarea-autosize';
 import { CodeBlock } from '@/components/ui/code-block';
+
+interface Message {
+  id: string;
+  role: 'function' | 'data' | 'system' | 'user' | 'assistant' | 'tool';
+  content: string;
+}
 
 export default function Chat() {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -22,7 +28,7 @@ export default function Chat() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
@@ -33,7 +39,7 @@ export default function Chat() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e as any);
+      handleSubmit(e);
     }
   };
 
@@ -83,11 +89,11 @@ export default function Chat() {
           </div>
         )}
 
-        {messages.map((m: any) => (
+        {messages.map((m: Message) => (
           <div
             key={m.id}
             className={`flex items-start gap-4 ${m.role === 'user' ? 'flex-row-reverse' : ''
-              }`}
+              } group`}
           >
             <div
               className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${m.role === 'user'
@@ -103,11 +109,31 @@ export default function Chat() {
             </div>
 
             <div
-              className={`p-4 rounded-2xl max-w-[80%] shadow-sm ${m.role === 'user'
+              className={`relative p-4 rounded-2xl max-w-[80%] shadow-sm ${m.role === 'user'
                 ? 'bg-blue-500 text-white rounded-br-none'
                 : 'bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-bl-none'
                 }`}
             >
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(m.content);
+                  const btn = document.getElementById(`copy-${m.id}`);
+                  if (btn) {
+                    btn.style.display = 'block';
+                    setTimeout(() => {
+                      btn.style.display = 'none';
+                    }, 2000);
+                  }
+                }}
+                className={`absolute ${m.role === 'user' ? '-left-8' : '-right-8'} top-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300`}
+                title="Copy message"
+              >
+                <Copy className="w-4 h-4" />
+              </button>
+              <div id={`copy-${m.id}`} className={`absolute ${m.role === 'user' ? '-left-8' : '-right-8'} top-2 hidden text-green-500 p-1.5`}>
+                <Check className="w-4 h-4" />
+              </div>
+
               <div className="prose dark:prose-invert max-w-none text-sm">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
