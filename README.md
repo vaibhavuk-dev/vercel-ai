@@ -12,6 +12,7 @@ A modern AI chat interface built with Next.js, Vercel AI SDK, and Tailwind CSS.
 - ⌨️ **Smart Input**: Auto-expanding textarea with Shift+Enter support.
 - 🛑 **Control Generation**: Stop AI generation mid-stream.
 - 🔄 **Regenerate Response**: Retry unsatisfactory AI responses.
+- 🌓 **Dark Mode**: Toggle between light and dark themes.
 
 ## Getting Started
 
