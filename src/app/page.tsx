@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import TextareaAutosize from 'react-textarea-autosize';
 import { CodeBlock } from '@/components/ui/code-block';
+import { ModeToggle } from '@/components/ui/theme-toggle';
 
 interface Message {
   id: string;
@@ -53,6 +54,7 @@ export default function Chat() {
           AI Assistant
         </h1>
         <div className="flex-1" />
+        <ModeToggle />
         <button
           onClick={() => setMessages([])}
           className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors text-zinc-500 hover:text-red-500"
